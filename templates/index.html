@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.js"></script>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+
+    <div style="margin-top: 50px;" class="ui container">
+
+        
+
+   
+    <h1 class="ui center aligned header">Meal Prep App</h1>
+
+    <form class="ui form" action="/add" method="post"> 
+        <div class="field">
+            <label for="title">Recipe: </label>
+            <input type="text" name="url" placeholder="Enter URL">
+            <br>
+            <button class="ui blue button" type="submit">Search!</button>
+        </div>
+    </form>
+
+
+    {% for meal in meal_list %}
+    <div class="ui segment">
+        <p class="ui big header"> {{ meal.id }} | {{ meal.title }} </p>
+        {% if meal.complete == False  %}
+            <span class="ui gray label">Not Cooked</span>
+        {% else %}
+            <span class="ui green label">Yum!</span>
+        {% endif  %}
+
+        <a class="ui blue button" href="/update/{{ meal.id }}">Update</a>
+        <a class="ui red button" href="/delete/{{ meal.id }}">Delete</a>
+
+        <p> {{ meal.ingredients }} </p>
+
+        <table class="table">
+            <thead>
+              <tr>
+                <th>Ingredients</th>
+                <th>Price</th>
+              </tr>
+            </thead>
+            <tbody>
+
+                <tr>
+                {% for x in meal_data %}
+                  <td> {{ x }} </td>
+                </tr>
+                {% endfor %}
+    
+            </tbody>
+
+          </table>
+        
+    </div>
+    {% endfor %}
+</div>
+</body>
+</html>

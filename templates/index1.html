@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="path/to/chartjs/dist/chart.js"></script>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meal Prep Site</title>
+</head>
+<body>
+
+    <div style="margin-top: 50px;" class="ui container">
+
+    <h1 class="ui center aligned header">Budgeting Meal Prep</h1>
+
+    <form class="ui form" action="/add" method="post"> 
+        <div class="field">
+            <h3 for="title">Recipe: </h3>
+            <input type="text" name="url" placeholder="Enter URL">
+            <button class="ui orange button" type="submit">Search!</button>
+        </div>
+    </form>
+
+    {% for item in temp %}
+    <div class="ui segment">
+        <p class="ui big header"> {{ item.meal.id }} | {{ item.meal.title }} 
+        {% if item.meal.complete == False  %}
+            <span class="ui gray label">Not Cooked</span>
+        {% else %}
+            <span class="ui green label">Chef's kiss</span>
+        {% endif  %}
+        </p>
+
+        <a class="ui inverted blue button" href="/update/{{ item.meal.id }}">Update</a>
+        <a class="ui inverted red button" href="/delete/{{ item.meal.id }}">Delete</a>
+        <p></p>
+        <table class="table">
+            <thead>
+              <tr>
+                <th><h4>Ingredients</h4></th>
+              </tr>
+            </thead>
+            <tbody>
+                <tr>
+                {% for x in item.ing %}
+                    <td> {{ x }} </td>
+                </tr> 
+                {% endfor %} 
+                <tr>
+                    <div style="float:right">
+                        <canvas id="nutrientChart" width="400", height="400"></canvas>
+                        <script>
+                             const labels = [
+                                'Carbohydrates (g)',
+                                'Protein (g)',
+                                'Fat (g)'
+                            ];
+            
+                            var ctx = document.getElementById("nutrientChart");
+                            var pieChart = new Chart(ctx, {
+                                type: "pie",
+                                data: {
+                                    labels: labels,
+                                    datasets: [{
+                                    label: "Nutrients",
+                                    data: [ {{ item.meal.carbs }}, {{item.meal.protein}}, {{item.meal.fat}} ],
+                                    backgroundColor: [
+                                        'rgb(255, 99, 132)',
+                                        'rgb(54, 162, 235)',
+                                        'rgb(255, 205, 86)'],
+                                    hoverOffset: 4
+                                }]   
+                            },
+                            options: {
+                                responsive: false
+                            }
+                            });
+                        
+                        </script>
+                    </div>
+                </tr>
+                          
+            </tbody>
+        </table>
+
+        <p></p>
+        <div>
+            Carbs: {{ item.meal.carbs }}g, Protein: {{item.meal.protein}}g, Fat: {{item.meal.fat}}g
+        </div>
+
+        
+    </div>
+    {% endfor %}
+</div>
+</body>
+</html>
